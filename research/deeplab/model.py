@@ -699,7 +699,7 @@ def refine_by_decoder(features,
       stride=1,
       reuse=reuse):
     with slim.arg_scope([batch_norm], **batch_norm_params):
-      with tf.variable_scope(DECODER_SCOPE, DECODER_SCOPE, [features]):
+      with tf.compat.v1.variable_scope(DECODER_SCOPE, DECODER_SCOPE, [features]):
         decoder_features = features
         decoder_stage = 0
         scope_suffix = ''
