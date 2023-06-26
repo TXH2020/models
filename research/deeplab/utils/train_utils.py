@@ -25,7 +25,7 @@ from deeplab.core import utils
 
 def _div_maybe_zero(total_loss, num_present):
   """Normalizes the total loss with the number of present pixels."""
-  return tf.to_float(num_present > 0) * tf.math.divide(
+  return tf.cast((num_present > 0),tf.float32) * tf.math.divide(
       total_loss,
       tf.maximum(1e-5, num_present))
 
@@ -86,7 +86,7 @@ def add_softmax_cross_entropy_loss_for_each_scale(scales_to_logits,
 
     if upsample_logits:
       # Label is not downsampled, and instead we upsample logits.
-      logits = tf.image.resize_bilinear(
+      logits = tf.compat.v1.image.resize_bilinear(
           logits,
           preprocess_utils.resolve_shape(labels, 4)[1:3],
           align_corners=True)
@@ -141,10 +141,10 @@ def add_softmax_cross_entropy_loss_for_each_scale(scales_to_logits,
     default_loss_scope = ('softmax_all_pixel_loss'
                           if top_k_percent_pixels == 1.0 else
                           'softmax_hard_example_mining')
-    with tf.name_scope(loss_scope, default_loss_scope,
+    with tf.compat.v1.name_scope(loss_scope, default_loss_scope,
                        [logits, train_labels, weights]):
       # Compute the loss for all pixels.
-      pixel_losses = tf.nn.softmax_cross_entropy_with_logits_v2(
+      pixel_losses = tf.nn.softmax_cross_entropy_with_logits(
           labels=tf.stop_gradient(
               train_labels, name='train_labels_stop_gradient'),
           logits=logits,
@@ -155,7 +155,7 @@ def add_softmax_cross_entropy_loss_for_each_scale(scales_to_logits,
         total_loss = tf.reduce_sum(weighted_pixel_losses)
         num_present = tf.reduce_sum(keep_mask)
         loss = _div_maybe_zero(total_loss, num_present)
-        tf.losses.add_loss(loss)
+        tf.compat.v1.losses.add_loss(loss)
       else:
         num_pixels = tf.to_float(tf.shape(logits)[0])
         # Compute the top_k_percent pixels based on current training step.
