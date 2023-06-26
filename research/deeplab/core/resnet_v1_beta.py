@@ -30,10 +30,10 @@ from __future__ import print_function
 import functools
 from six.moves import range
 import tensorflow as tf
-from tensorflow.contrib import slim as contrib_slim
+import tf_slim as contrib_slim
 from deeplab.core import conv2d_ws
 from deeplab.core import utils
-from tensorflow.contrib.slim.nets import resnet_utils
+from tf_slim.nets import resnet_utils
 
 slim = contrib_slim
 
