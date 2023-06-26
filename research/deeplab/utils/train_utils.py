@@ -321,10 +321,10 @@ def get_model_learning_rate(learning_policy,
     ValueError: If `boundaries` and `boundary_learning_rates` are not set for
       multi_steps learning rate decay.
   """
-  global_step = tf.train.get_or_create_global_step()
+  global_step = tf.compat.v1.train.get_or_create_global_step()
   adjusted_global_step = tf.maximum(global_step - slow_start_step, 0)
   if decay_steps == 0.0:
-    tf.logging.info('Setting decay_steps to total training steps.')
+    tf.compat.v1.logging.info('Setting decay_steps to total training steps.')
     decay_steps = training_number_of_steps - slow_start_step
   if learning_policy == 'step':
     learning_rate = tf.train.exponential_decay(
@@ -334,7 +334,7 @@ def get_model_learning_rate(learning_policy,
         learning_rate_decay_factor,
         staircase=True)
   elif learning_policy == 'poly':
-    learning_rate = tf.train.polynomial_decay(
+    learning_rate = tf.compat.v1.train.polynomial_decay(
         base_learning_rate,
         adjusted_global_step,
         decay_steps=decay_steps,
