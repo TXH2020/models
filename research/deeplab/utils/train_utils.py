@@ -17,7 +17,7 @@
 
 import six
 import tensorflow as tf
-from tensorflow.contrib import framework as contrib_framework
+import tf_slim as contrib_framework
 
 from deeplab.core import preprocess_utils
 from deeplab.core import utils
