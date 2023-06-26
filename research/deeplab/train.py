@@ -377,7 +377,7 @@ def main(unused_argv):
       summaries.add(tf.summary.scalar('learning_rate', learning_rate))
 
       if FLAGS.optimizer == 'momentum':
-        optimizer = tf.train.MomentumOptimizer(learning_rate, FLAGS.momentum)
+        optimizer = tf.compat.v1.train.MomentumOptimizer(learning_rate, FLAGS.momentum)
       elif FLAGS.optimizer == 'adam':
         optimizer = tf.train.AdamOptimizer(
             learning_rate=FLAGS.adam_learning_rate, epsilon=FLAGS.adam_epsilon)
@@ -395,7 +395,7 @@ def main(unused_argv):
     with tf.device(config.variables_device()):
       total_loss, grads_and_vars = model_deploy.optimize_clones(
           clones, optimizer)
-      total_loss = tf.check_numerics(total_loss, 'Loss is inf or nan.')
+      total_loss = tf.compat.v1.check_numerics(total_loss, 'Loss is inf or nan.')
       summaries.add(tf.summary.scalar('total_loss', total_loss))
 
       # Modify the gradients for biases and last layer variables.
