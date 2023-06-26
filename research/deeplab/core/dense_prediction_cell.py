@@ -26,7 +26,7 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
-from tensorflow.contrib import slim as contrib_slim
+import tf_slim as contrib_slim
 
 from deeplab.core import utils
 
@@ -211,7 +211,7 @@ class DensePredictionCell(object):
         stride=1,
         reuse=reuse):
       with slim.arg_scope([slim.batch_norm], **batch_norm_params):
-        with tf.variable_scope(scope, _META_ARCHITECTURE_SCOPE, [features]):
+        with tf.compat.v1.variable_scope(scope, _META_ARCHITECTURE_SCOPE, [features]):
           depth = hparams['reduction_size']
           branch_logits = []
           for i, current_config in enumerate(self.config):
