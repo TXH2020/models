@@ -36,15 +36,15 @@ from __future__ import print_function
 
 from six.moves import range
 import tensorflow as tf
-from tensorflow.contrib import framework as contrib_framework
-from tensorflow.contrib import layers as contrib_layers
-from tensorflow.contrib import slim as contrib_slim
-from tensorflow.contrib import training as contrib_training
+import tf_slim as contrib_framework
+import tf_slim.layers as contrib_layers
+import tf_slim as contrib_slim
+import tf_slim.training as contrib_training
 
 from deeplab.core import nas_genotypes
 from deeplab.core import utils
 from deeplab.core.nas_cell import NASBaseCell
-from tensorflow.contrib.slim.nets import resnet_utils
+from tf_slim.nets import resnet_utils
 
 arg_scope = contrib_framework.arg_scope
 slim = contrib_slim
