@@ -418,13 +418,13 @@ def main(unused_argv):
     # Add the summaries from the first clone. These contain the summaries
     # created by model_fn and either optimize_clones() or _gather_clone_loss().
     summaries |= set(
-        tf.get_collection(tf.GraphKeys.SUMMARIES, first_clone_scope))
+        tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.SUMMARIES, first_clone_scope))
 
     # Merge all summaries together.
-    summary_op = tf.summary.merge(list(summaries))
+    summary_op = tf.compat.v1.summary.merge(list(map(str,summaries)))
 
     # Soft placement allows placing on CPU ops without GPU implementation.
-    session_config = tf.ConfigProto(
+    session_config = tf.compat.v1.ConfigProto(
         allow_soft_placement=True, log_device_placement=False)
 
     # Start the training.
@@ -432,8 +432,8 @@ def main(unused_argv):
     if profile_dir is not None:
       tf.gfile.MakeDirs(profile_dir)
 
-    with contrib_tfprof.ProfileContext(
-        enabled=profile_dir is not None, profile_dir=profile_dir):
+    with tf.profiler.experimental.Profile(
+         logdir=profile_dir):
       init_fn = None
       if FLAGS.tf_initial_checkpoint:
         init_fn = train_utils.get_model_init_fn(
