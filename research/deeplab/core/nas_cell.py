@@ -24,12 +24,12 @@ import functools
 from six.moves import range
 from six.moves import zip
 import tensorflow as tf
-from tensorflow.contrib import framework as contrib_framework
-from tensorflow.contrib import slim as contrib_slim
+import tf_slim as contrib_framework
+import tf_slim as contrib_slim
 from deeplab.core import xception as xception_utils
 from deeplab.core.utils import resize_bilinear
 from deeplab.core.utils import scale_dimension
-from tensorflow.contrib.slim.nets import resnet_utils
+from tf_slim.nets import resnet_utils
 
 arg_scope = contrib_framework.arg_scope
 slim = contrib_slim
