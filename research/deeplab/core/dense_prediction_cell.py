@@ -221,7 +221,7 @@ class DensePredictionCell(object):
                 crop_size=crop_size,
                 output_stride=output_stride,
                 image_pooling_crop_size=image_pooling_crop_size)
-            tf.logging.info(current_config)
+            tf.compat.v1.logging.info(current_config)
             if current_config[_INPUT] < 0:
               operation_input = features
             else:
