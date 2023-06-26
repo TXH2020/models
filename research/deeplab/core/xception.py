@@ -51,10 +51,10 @@ from __future__ import print_function
 import collections
 from six.moves import range
 import tensorflow as tf
-from tensorflow.contrib import slim as contrib_slim
+import tf_slim as contrib_slim
 
 from deeplab.core import utils
-from tensorflow.contrib.slim.nets import resnet_utils
+from tf_slim.nets import resnet_utils
 from nets.mobilenet import conv_blocks as mobilenet_v3_ops
 
 slim = contrib_slim
@@ -927,7 +927,7 @@ def xception_arg_scope(weight_decay=0.00004,
   batch_norm = utils.get_batch_norm_fn(sync_batch_norm_method)
   with slim.arg_scope(
       [slim.conv2d, slim.separable_conv2d],
-      weights_initializer=tf.truncated_normal_initializer(
+      weights_initializer=tf.compat.v1.truncated_normal_initializer(
           stddev=weights_initializer_stddev),
       activation_fn=activation_fn,
       normalizer_fn=batch_norm if use_batch_norm else None):
