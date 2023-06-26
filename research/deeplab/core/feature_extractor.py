@@ -19,7 +19,7 @@ import copy
 import functools
 
 import tensorflow.compat.v1 as tf
-from tensorflow.contrib import slim as contrib_slim
+import tf_slim as contrib_slim
 
 from deeplab.core import nas_network
 from deeplab.core import resnet_v1_beta
