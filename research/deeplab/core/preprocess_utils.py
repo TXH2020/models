@@ -402,7 +402,7 @@ def resolve_shape(tensor, rank=None, scope=None):
   Returns:
     shape: The full shape of the tensor.
   """
-  with tf.name_scope(scope, 'resolve_shape', [tensor]):
+  with tf.compat.v1.name_scope(scope, 'resolve_shape', [tensor]):
     if rank is not None:
       shape = tensor.get_shape().with_rank(rank).as_list()
     else:
