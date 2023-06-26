@@ -23,16 +23,16 @@ from __future__ import division
 from __future__ import print_function
 import six
 import tensorflow as tf
-from tensorflow.contrib import quantize as contrib_quantize
-from tensorflow.contrib import tfprof as contrib_tfprof
+#from tensorflow.contrib import quantize as contrib_quantize
+#from tensorflow.contrib import tfprof as contrib_tfprof
 from deeplab import common
 from deeplab import model
 from deeplab.datasets import data_generator
 from deeplab.utils import train_utils
 from deployment import model_deploy
-
-slim = tf.contrib.slim
-flags = tf.app.flags
+import tf_slim as contrib_slim
+slim = contrib_slim
+flags = tf.compat.v1.app.flags
 FLAGS = flags.FLAGS
 
 # Settings for multi-GPUs/multi-replicas training.
@@ -271,7 +271,7 @@ def _build_deeplab(iterator, outputs_to_num_classes, ignore_label):
 
 
 def main(unused_argv):
-  tf.logging.set_verbosity(tf.logging.INFO)
+  tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.INFO)
   # Set up deployment (i.e., multi-GPUs and/or multi-replicas).
   config = model_deploy.DeploymentConfig(
       num_clones=FLAGS.num_clones,
@@ -286,8 +286,8 @@ def main(unused_argv):
 
   clone_batch_size = FLAGS.train_batch_size // config.num_clones
 
-  tf.gfile.MakeDirs(FLAGS.train_logdir)
-  tf.logging.info('Training on %s set', FLAGS.train_split)
+  tf.io.gfile.makedirs(FLAGS.train_logdir)
+  tf.compat.v1.logging.info('Training on %s set', FLAGS.train_split)
 
   with tf.Graph().as_default() as graph:
     with tf.device(config.inputs_device()):
@@ -311,7 +311,7 @@ def main(unused_argv):
 
     # Create the global step on the device storing the variables.
     with tf.device(config.variables_device()):
-      global_step = tf.train.get_or_create_global_step()
+      global_step = tf.compat.v1.train.get_or_create_global_step()
 
       # Define the model and create clones.
       model_fn = _build_deeplab
@@ -323,13 +323,13 @@ def main(unused_argv):
       # Gather update_ops from the first clone. These contain, for example,
       # the updates for the batch_norm variables created by model_fn.
       first_clone_scope = config.clone_scope(0)
-      update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS, first_clone_scope)
+      update_ops = tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.UPDATE_OPS, first_clone_scope)
 
     # Gather initial summaries.
-    summaries = set(tf.get_collection(tf.GraphKeys.SUMMARIES))
+    summaries = set(tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.SUMMARIES))
 
     # Add summaries for model variables.
-    for model_var in tf.model_variables():
+    for model_var in tf.compat.v1.model_variables():
       summaries.add(tf.summary.histogram(model_var.op.name, model_var))
 
     # Add summaries for images, labels, semantic predictions
@@ -357,7 +357,7 @@ def main(unused_argv):
               'samples/%s' % common.OUTPUT_TYPE, summary_predictions))
 
     # Add summaries for losses.
-    for loss in tf.get_collection(tf.GraphKeys.LOSSES, first_clone_scope):
+    for loss in tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.LOSSES, first_clone_scope):
       summaries.add(tf.summary.scalar('losses/%s' % loss.op.name, loss))
 
     # Build the optimizer based on the device specification.
@@ -461,4 +461,4 @@ def main(unused_argv):
 if __name__ == '__main__':
   flags.mark_flag_as_required('train_logdir')
   flags.mark_flag_as_required('dataset_dir')
-  tf.app.run()
+  tf.compat.v1.app.run()
