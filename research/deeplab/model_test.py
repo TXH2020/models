@@ -101,7 +101,7 @@ class DeeplabModelTest(tf.test.TestCase):
             model_options,
             image_pyramid=[1.0])
 
-        sess.run(tf.global_variables_initializer())
+        sess.run(tf.compat.v1.global_variables_initializer())
         outputs_to_scales_to_logits = sess.run(outputs_to_scales_to_logits)
 
         # Check computed results for each output type.
