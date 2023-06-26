@@ -94,7 +94,7 @@ class DeeplabModelTest(tf.test.TestCase):
     g = tf.Graph()
     with g.as_default():
       with self.test_session(graph=g) as sess:
-        inputs = tf.random_uniform(
+        inputs = tf.random.uniform(
             (1, crop_size[0], crop_size[1], 3))
         outputs_to_scales_to_logits = model.multi_scale_logits(
             inputs,
