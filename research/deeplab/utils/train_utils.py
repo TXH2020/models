@@ -248,7 +248,7 @@ def get_model_gradient_multipliers(last_layers, last_layer_gradient_multiplier):
   """
   gradient_multipliers = {}
 
-  for var in tf.model_variables():
+  for var in tf.compat.v1.model_variables():
     # Double the learning rate for biases.
     if 'biases' in var.op.name:
       gradient_multipliers[var.op.name] = 2.
