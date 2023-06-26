@@ -130,7 +130,7 @@ def predict_labels_multi_scale(images,
           fine_tune_batch_norm=False)
 
     if add_flipped_images:
-      with tf..compat.v1.variable_scope(tf.get_variable_scope(), reuse=True):
+      with tf.compat.v1.variable_scope(tf.get_variable_scope(), reuse=True):
         outputs_to_scales_to_logits_reversed = multi_scale_logits(
             tf.reverse_v2(images, [2]),
             model_options=model_options,
