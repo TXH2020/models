@@ -92,7 +92,7 @@ def split_separable_conv2d(inputs,
       kernel_size=kernel_size,
       depth_multiplier=1,
       rate=rate,
-      weights_initializer=tf.truncated_normal_initializer(
+      weights_initializer=tf.compat.v1.truncated_normal_initializer(
           stddev=depthwise_weights_initializer_stddev),
       weights_regularizer=None,
       scope=scope + '_depthwise')
@@ -100,7 +100,7 @@ def split_separable_conv2d(inputs,
       outputs,
       filters,
       1,
-      weights_initializer=tf.truncated_normal_initializer(
+      weights_initializer=tf.compat.v1.truncated_normal_initializer(
           stddev=pointwise_weights_initializer_stddev),
       weights_regularizer=slim.l2_regularizer(weight_decay),
       scope=scope + '_pointwise')
