@@ -16,8 +16,7 @@
 
 """This script contains utility functions."""
 import tensorflow as tf
-from tensorflow.contrib import framework as contrib_framework
-from tensorflow.contrib import slim as contrib_slim
+import tf_slim as contrib_slim
 
 slim = contrib_slim
 
@@ -38,7 +37,7 @@ def resize_bilinear(images, size, output_dtype=tf.float32):
     A tensor of size [batch, height_out, width_out, channels] as a dtype of
       output_dtype.
   """
-  images = tf.image.resize_bilinear(images, size, align_corners=True)
+  images = tf.compat.v1.image.resize_bilinear(images, size, align_corners=True)
   return tf.cast(images, dtype=output_dtype)
 
 
@@ -53,7 +52,7 @@ def scale_dimension(dim, scale):
     Scaled dimension.
   """
   if isinstance(dim, tf.Tensor):
-    return tf.cast((tf.to_float(dim) - 1.0) * scale + 1.0, dtype=tf.int32)
+    return tf.cast((tf.cast(dim,tf.float32) - 1.0) * scale + 1.0, dtype=tf.int32)
   else:
     return int((float(dim) - 1.0) * scale + 1.0)
 
