@@ -233,7 +233,7 @@ class Dataset(object):
             tf.io.FixedLenFeature((), tf.string, default_value='png'),
     }
 
-    parsed_features = tf.parse_single_example(example_proto, features)
+    parsed_features = tf.io.parse_single_example(example_proto, features)
 
     image = _decode_image(parsed_features['image/encoded'], channels=3)
 
