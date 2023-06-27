@@ -18,14 +18,14 @@
 import os
 import tensorflow as tf
 
-from tensorflow.contrib import quantize as contrib_quantize
+#from tensorflow.contrib import quantize as contrib_quantize
 from tensorflow.python.tools import freeze_graph
 from deeplab import common
 from deeplab import input_preprocess
 from deeplab import model
-
-slim = tf.contrib.slim
-flags = tf.app.flags
+import tf_slim as contrib_slim
+slim = contrib_slim
+flags = tf.compat.v1.app.flags
 
 FLAGS = flags.FLAGS
 
@@ -88,7 +88,7 @@ def _create_input_tensors():
     resized_image_size: Resized image shape tensor [height, width].
   """
   # input_preprocess takes 4-D image tensor as input.
-  input_image = tf.placeholder(tf.uint8, [1, None, None, 3], name=_INPUT_NAME)
+  input_image = tf.compat.v1.placeholder(tf.uint8, [1, None, None, 3], name=_INPUT_NAME)
   original_image_size = tf.shape(input_image)[1:3]
 
   # Squeeze the dimension in axis=0 since `preprocess_image_and_label` assumes
@@ -114,8 +114,8 @@ def _create_input_tensors():
 
 
 def main(unused_argv):
-  tf.logging.set_verbosity(tf.logging.INFO)
-  tf.logging.info('Prepare to export model to: %s', FLAGS.export_path)
+  tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.INFO)
+  tf.compat.v1.logging.info('Prepare to export model to: %s', FLAGS.export_path)
 
   with tf.Graph().as_default():
     image, image_size, resized_image_size = _create_input_tensors()
@@ -127,7 +127,7 @@ def main(unused_argv):
         output_stride=FLAGS.output_stride)
 
     if tuple(FLAGS.inference_scales) == (1.0,):
-      tf.logging.info('Exported model performs single-scale inference.')
+      tf.compat.v1.logging.info('Exported model performs single-scale inference.')
       predictions = model.predict_labels(
           image,
           model_options=model_options,
@@ -159,7 +159,7 @@ def main(unused_argv):
     def _resize_label(label, label_size):
       # Expand dimension of label to [1, height, width, 1] for resize operation.
       label = tf.expand_dims(label, 3)
-      resized_label = tf.image.resize_images(
+      resized_label = tf.compat.v1.image.resize_images(
           label,
           label_size,
           method=tf.image.ResizeMethod.NEAREST_NEIGHBOR,
@@ -168,18 +168,18 @@ def main(unused_argv):
     semantic_predictions = _resize_label(semantic_predictions, image_size)
     semantic_predictions = tf.identity(semantic_predictions, name=_OUTPUT_NAME)
 
-    semantic_probabilities = tf.image.resize_bilinear(
+    semantic_probabilities = tf.compat.v1.image.resize_bilinear(
         semantic_probabilities, image_size, align_corners=True,
         name=_OUTPUT_PROB_NAME)
 
     if FLAGS.quantize_delay_step >= 0:
       contrib_quantize.create_eval_graph()
 
-    saver = tf.train.Saver(tf.all_variables())
+    saver = tf.compat.v1.train.Saver(tf.compat.v1.all_variables())
 
     dirname = os.path.dirname(FLAGS.export_path)
-    tf.gfile.MakeDirs(dirname)
-    graph_def = tf.get_default_graph().as_graph_def(add_shapes=True)
+    tf.io.gfile.makedirs(dirname)
+    graph_def = tf.compat.v1.get_default_graph().as_graph_def(add_shapes=True)
     freeze_graph.freeze_graph_with_def_protos(
         graph_def,
         saver.as_saver_def(),
@@ -198,4 +198,4 @@ def main(unused_argv):
 if __name__ == '__main__':
   flags.mark_flag_as_required('checkpoint_path')
   flags.mark_flag_as_required('export_path')
-  tf.app.run()
+  tf.compat.v1.app.run()
