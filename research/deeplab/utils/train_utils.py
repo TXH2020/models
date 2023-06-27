@@ -197,14 +197,14 @@ def get_model_init_fn(train_logdir,
     Initialization function.
   """
   if tf_initial_checkpoint is None:
-    tf.logging.info('Not initializing the model from a checkpoint.')
+    tf.compat.v1.logging.info('Not initializing the model from a checkpoint.')
     return None
 
   if tf.train.latest_checkpoint(train_logdir):
-    tf.logging.info('Ignoring initialization; other checkpoint exists')
+    tf.compat.v1.logging.info('Ignoring initialization; other checkpoint exists')
     return None
 
-  tf.logging.info('Initializing model from path: %s', tf_initial_checkpoint)
+  tf.compat.v1.logging.info('Initializing model from path: %s', tf_initial_checkpoint)
 
   # Variables that will not be restored.
   exclude_list = ['global_step']
@@ -219,7 +219,7 @@ def get_model_init_fn(train_logdir,
         tf_initial_checkpoint,
         variables_to_restore,
         ignore_missing_vars=ignore_missing_vars)
-    global_step = tf.train.get_or_create_global_step()
+    global_step = tf.compat.v1.train.get_or_create_global_step()
 
     def restore_fn(sess):
       sess.run(init_op, init_feed_dict)
