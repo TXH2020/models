@@ -31,6 +31,7 @@ from deeplab.datasets import data_generator
 from deeplab.utils import train_utils
 from deployment import model_deploy
 import tf_slim as contrib_slim
+tf.compat.v1.disable_eager_execution()
 slim = contrib_slim
 flags = tf.compat.v1.app.flags
 FLAGS = flags.FLAGS
@@ -431,11 +432,9 @@ def main(unused_argv):
     profile_dir = FLAGS.profile_logdir
     if profile_dir is not None:
       tf.gfile.MakeDirs(profile_dir)
-
-    with tf.profiler.experimental.Profile(
-         logdir=profile_dir):
-      init_fn = None
-      if FLAGS.tf_initial_checkpoint:
+    #with tf.profiler.experimental.Profile(logdir=profile_dir):
+    init_fn = None
+    if FLAGS.tf_initial_checkpoint:
         init_fn = train_utils.get_model_init_fn(
             FLAGS.train_logdir,
             FLAGS.tf_initial_checkpoint,
@@ -443,7 +442,7 @@ def main(unused_argv):
             last_layers,
             ignore_missing_vars=True)
 
-      slim.learning.train(
+    slim.learning.train(
           train_tensor,
           logdir=FLAGS.train_logdir,
           log_every_n_steps=FLAGS.log_steps,
