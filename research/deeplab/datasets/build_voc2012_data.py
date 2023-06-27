@@ -116,7 +116,7 @@ def _convert_dataset(dataset_split):
             i + 1, len(filenames), shard_id))
         sys.stdout.flush()
         # Read the image.
-        image_filename,image_data=None
+        image_filename,image_data=None,None
         FLAGS.image_format='jpg'
         try:
           image_filename = os.path.join(
