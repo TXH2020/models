@@ -116,9 +116,23 @@ def _convert_dataset(dataset_split):
             i + 1, len(filenames), shard_id))
         sys.stdout.flush()
         # Read the image.
-        image_filename = os.path.join(
+        image_filename,image_data=None
+        FLAGS.image_format='jpg'
+        try:
+          image_filename = os.path.join(
             FLAGS.image_folder, filenames[i] + '.' + FLAGS.image_format)
-        image_data = tf.compat.v1.gfile.GFile(image_filename, 'rb').read()
+          image_data = tf.compat.v1.gfile.GFile(image_filename, 'rb').read()
+        except:
+          FLAGS.image_format='png'
+          try:
+            image_filename = os.path.join(
+            FLAGS.image_folder, filenames[i] + '.' + FLAGS.image_format)
+            image_data = tf.compat.v1.gfile.GFile(image_filename, 'rb').read()
+          except:
+            FLAGS.image_format='jpeg'
+            image_filename = os.path.join(
+            FLAGS.image_folder, filenames[i] + '.' + FLAGS.image_format)
+            image_data = tf.compat.v1.gfile.GFile(image_filename, 'rb').read()
         height, width = image_reader.read_image_dims(image_data)
         # Read the semantic segmentation annotation.
         seg_filename = os.path.join(
