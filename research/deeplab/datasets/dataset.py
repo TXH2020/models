@@ -137,38 +137,13 @@ References:
 
 import collections
 
-from deeplab2.data import ade20k_constants
-from deeplab2.data import waymo_constants
-
 # Dataset names.
-_CITYSCAPES_PANOPTIC = 'cityscapes_panoptic'
-_KITTI_STEP = 'kitti_step'
-_MOTCHALLENGE_STEP = 'motchallenge_step'
-_CITYSCAPES_DVPS = 'cityscapes_dvps'
-_SEMKITTI_DVPS = 'semkitti_dvps'
-_COCO_PANOPTIC = 'coco_panoptic'
-_ADE20K_PANOPTIC = 'ade20k_panoptic'
 
-# WOD: PVPS dataset names.
-_WOD_PVPS_IMAGE_PANOPTIC_SEG = 'wod_pvps_image_panoptic_seg'
-_WOD_PVPS_DEPTH_VIDEO_PANOPTIC_SEG = 'wod_pvps_depth_video_panoptic_seg'
-_WOD_PVPS_IMAGE_PANOPTIC_SEG_MULTICAM = 'wod_pvps_image_panoptic_seg_multicam'
-_WOD_PVPS_DEPTH_VIDEO_PANOPTIC_SEG_MULTICAM = (
-    'wod_pvps_depth_video_panoptic_seg_multicam')
+_COCO_PANOPTIC = 'coco_panoptic'
 
 
 # Colormap names.
-CITYSCAPES_COLORMAP = 'cityscapes'
-MOTCHALLENGE_COLORMAP = 'motchallenge'
 COCO_COLORMAP = 'coco'
-_ADE20K_COLORMAP = 'ade20k'
-WOD_PVPS_COLORMAP = waymo_constants.COLORMAP
-
-# Camera Names for WOD: PVPS.
-WOD_PVPS_CAMERA_NAMES = [
-    'side_left', 'front_left', 'front',
-    'front_right', 'side_right'
-]
 
 
 # Named tuple to describe dataset properties.
@@ -212,87 +187,6 @@ def _build_dataset_info(**kwargs):
   return DatasetDescriptor(**default)
 
 
-CITYSCAPES_PANOPTIC_INFORMATION = _build_dataset_info(
-    dataset_name=_CITYSCAPES_PANOPTIC,
-    splits_to_sizes={'train_fine': 2975,
-                     'val_fine': 500,
-                     'trainval_fine': 3475,
-                     'test_fine': 1525},
-    num_classes=19,
-    ignore_label=255,
-    panoptic_label_divisor=1000,
-    class_has_instances_list=tuple(range(11, 19)),
-    is_video_dataset=False,
-    colormap=CITYSCAPES_COLORMAP,
-    is_depth_dataset=False,
-    ignore_depth=None,
-)
-
-KITTI_STEP_INFORMATION = _build_dataset_info(
-    dataset_name=_KITTI_STEP,
-    splits_to_sizes={'train': 5027,
-                     'val': 2981,
-                     'test': 11095},
-    num_classes=19,
-    ignore_label=255,
-    panoptic_label_divisor=1000,
-    class_has_instances_list=(11, 13),
-    is_video_dataset=True,
-    colormap=CITYSCAPES_COLORMAP,
-    is_depth_dataset=False,
-    ignore_depth=None,
-)
-
-MOTCHALLENGE_STEP_INFORMATION = _build_dataset_info(
-    dataset_name=_MOTCHALLENGE_STEP,
-    splits_to_sizes={'train': 525,  # Sequence 9.
-                     'val': 600,  # Sequence 2.
-                     'test': 0},
-    num_classes=7,
-    ignore_label=255,
-    panoptic_label_divisor=1000,
-    class_has_instances_list=(4,),
-    is_video_dataset=True,
-    colormap=MOTCHALLENGE_COLORMAP,
-    is_depth_dataset=False,
-    ignore_depth=None,
-)
-
-CITYSCAPES_DVPS_INFORMATION = _build_dataset_info(
-    dataset_name=_CITYSCAPES_DVPS,
-    # The numbers of images are 2400/300/300 for train/val/test. Here, the
-    # sizes are the number of consecutive frame pairs. As each sequence has 6
-    # frames, the number of pairs for the train split is 2400 / 6 * 5 = 2000.
-    # Similarly, we get 250 pairs for the val split and the test split.
-    splits_to_sizes={'train': 2000,
-                     'val': 250,
-                     'test': 250},
-    num_classes=19,
-    ignore_label=32,
-    panoptic_label_divisor=1000,
-    class_has_instances_list=tuple(range(11, 19)),
-    is_video_dataset=True,
-    colormap=CITYSCAPES_COLORMAP,
-    is_depth_dataset=True,
-    ignore_depth=0,
-)
-
-SEMKITTI_DVPS_INFORMATION = _build_dataset_info(
-    dataset_name=_SEMKITTI_DVPS,
-    splits_to_sizes={'train': 19120,
-                     'val': 4070,
-                     'test': 4340},
-    num_classes=19,
-    ignore_label=255,
-    panoptic_label_divisor=65536,
-    class_has_instances_list=tuple(range(8)),
-    is_video_dataset=True,
-    # Reuses Cityscapes colormap.
-    colormap=CITYSCAPES_COLORMAP,
-    is_depth_dataset=True,
-    ignore_depth=0,
-)
-
 COCO_PANOPTIC_INFORMATION = _build_dataset_info(
     dataset_name=_COCO_PANOPTIC,
     splits_to_sizes={'train': 118,
@@ -308,92 +202,11 @@ COCO_PANOPTIC_INFORMATION = _build_dataset_info(
     ignore_depth=None,
 )
 
-ADE20K_PANOPTIC_INFORMATION = _build_dataset_info(
-    dataset_name=_ADE20K_PANOPTIC,
-    splits_to_sizes={
-        'train': 20210,
-        'val': 2000,
-    },
-    num_classes=151,
-    ignore_label=0,
-    panoptic_label_divisor=1000,
-    class_has_instances_list=(
-        ade20k_constants.get_ade20k_class_has_instances_list()),
-    is_video_dataset=False,
-    colormap=_ADE20K_COLORMAP,
-    is_depth_dataset=False,
-    ignore_depth=None,
-)
+
 
 MAP_NAME_TO_DATASET_INFO = {
-    _CITYSCAPES_PANOPTIC: CITYSCAPES_PANOPTIC_INFORMATION,
-    _KITTI_STEP: KITTI_STEP_INFORMATION,
-    _MOTCHALLENGE_STEP: MOTCHALLENGE_STEP_INFORMATION,
-    _CITYSCAPES_DVPS: CITYSCAPES_DVPS_INFORMATION,
-    _COCO_PANOPTIC: COCO_PANOPTIC_INFORMATION,
-    _ADE20K_PANOPTIC: ADE20K_PANOPTIC_INFORMATION,
-    _SEMKITTI_DVPS: SEMKITTI_DVPS_INFORMATION,
+    _COCO_PANOPTIC: COCO_PANOPTIC_INFORMATION 
 }
 
 MAP_NAMES = list(MAP_NAME_TO_DATASET_INFO.keys())
 
-
-def _build_waymo_image_panoptic_seg_dataset(**kwargs):
-  """Builds Waymo dataset with default values."""
-  waymo_meta = waymo_constants.get_waymo_meta()
-  default = dict(
-      dataset_name=None,
-      # TODO(jierumei): Provide exact size.
-      splits_to_sizes={
-          'train': 70000,
-          'val': 10000,
-          'test': 20000,
-      },
-      ignore_label=waymo_constants.IGNORE_LABEL,
-      panoptic_label_divisor=waymo_constants.PANOPTIC_LABEL_DIVISOR,
-      num_classes=len(waymo_meta),
-      class_has_instances_list=list(
-          map(lambda val: val['id'],
-              filter(lambda val: val['isthing'], waymo_meta))),
-      is_video_dataset=True,
-      colormap=waymo_constants.COLORMAP,
-      is_depth_dataset=False,
-      ignore_depth=None,
-      camera_names=None,
-  )
-  for key in kwargs:
-    if key not in default:
-      raise ValueError(f'Unknown dataset option: {key}')
-  default.update(kwargs)
-  return DatasetDescriptor(**default)
-
-
-WOD_PVPS_IMAGE_PANOPTIC_SEG_DATASET = _build_waymo_image_panoptic_seg_dataset()
-WOD_PVPS_DEPTH_VIDEO_PANOPTIC_SEG_DATASET = (
-    _build_waymo_image_panoptic_seg_dataset(
-        dataset_name=_WOD_PVPS_DEPTH_VIDEO_PANOPTIC_SEG,
-        is_depth_dataset=True,
-        ignore_depth=0))
-WOD_PVPS_IMAGE_PANOPTIC_SEG_MULTICAM_DATASET = (
-    _build_waymo_image_panoptic_seg_dataset(
-        dataset_name=_WOD_PVPS_IMAGE_PANOPTIC_SEG_MULTICAM,
-        camera_names=WOD_PVPS_CAMERA_NAMES + ['panorama']))
-WOD_PVPS_DEPTH_VIDEO_PANOPTIC_SEG_MULTICAM_DATASET = (
-    _build_waymo_image_panoptic_seg_dataset(
-        dataset_name=_WOD_PVPS_DEPTH_VIDEO_PANOPTIC_SEG_MULTICAM,
-        is_depth_dataset=True,
-        ignore_depth=0,
-        camera_names=WOD_PVPS_CAMERA_NAMES + ['panorama']))
-
-waymo_dataset_all = {
-    _WOD_PVPS_IMAGE_PANOPTIC_SEG:
-        WOD_PVPS_IMAGE_PANOPTIC_SEG_DATASET,
-    _WOD_PVPS_DEPTH_VIDEO_PANOPTIC_SEG:
-        WOD_PVPS_DEPTH_VIDEO_PANOPTIC_SEG_DATASET,
-    _WOD_PVPS_IMAGE_PANOPTIC_SEG_MULTICAM:
-        WOD_PVPS_IMAGE_PANOPTIC_SEG_MULTICAM_DATASET,
-    _WOD_PVPS_DEPTH_VIDEO_PANOPTIC_SEG_MULTICAM:
-        WOD_PVPS_DEPTH_VIDEO_PANOPTIC_SEG_MULTICAM_DATASET,
-}
-MAP_NAME_TO_DATASET_INFO.update(waymo_dataset_all)
-MAP_NAMES.extend(list(waymo_dataset_all.keys()))
