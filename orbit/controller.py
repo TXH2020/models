@@ -563,7 +563,7 @@ class Controller:
     # pylint: disable=protected-access
     if self.checkpoint_manager:
       logging.info("Sync on async checkpoint saving.")
-      self.checkpoint_manager.sync()
+      self.checkpoint_manager.save()
 
 
 class StepTimer:
