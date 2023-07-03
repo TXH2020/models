@@ -23,7 +23,7 @@ from PIL import Image
 from PIL import ImageOps
 import tensorflow as tf
 
-from deeplab import common1
+import common
 
 _PANOPTIC_LABEL_FORMAT = 'raw'
 
