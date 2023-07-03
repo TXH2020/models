@@ -33,9 +33,9 @@ from absl import logging
 import numpy as np
 import tensorflow as tf
 
-from deeplab.datasets import coco_constants
-from deeplab.datasets import data_utils
-from deeplab.datasets import dataset
+import coco_constants
+import data_utils
+import dataset
 
 FLAGS = flags.FLAGS
 
