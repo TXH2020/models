@@ -52,7 +52,7 @@ COCO_ROOT="${WORK_DIR}/surface_dataset"
 OUTPUT_DIR="${WORK_DIR}/tfrecord"
 mkdir -p "${OUTPUT_DIR}"
 
-echo "Converting ADE20K dataset..."
+echo "Converting coco dataset..."
 python ./build_coco_data.py  \
   --coco_root="${COCO_ROOT}" \
   --output_dir="${OUTPUT_DIR}"
