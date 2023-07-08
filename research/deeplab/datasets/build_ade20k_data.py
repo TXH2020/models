@@ -95,21 +95,8 @@ def _convert_dataset(dataset_split, dataset_dir, dataset_label_dir):
             i + 1, num_images, shard_id))
         sys.stdout.flush()
         # Read the image.
-        image_filename,image_data=None,None
-        img_names[i]=os.path.splitext(img_names[i])[0]+".jpg"
-        print(img_names[i])
-        try:
-          image_filename = img_names[i]
-          image_data = tf.compat.v1.gfile.FastGFile(image_filename, 'rb').read()
-        except:
-          img_names[i]=os.path.splitext(img_names[i])[0]+".png"
-          try:
-            image_filename = img_names[i]
-            image_data = tf.compat.v1.gfile.FastGFile(image_filename, 'rb').read()
-          except:
-            img_names[i]=os.path.splitext(img_names[i])[0]+".jpeg"
-            image_filename = img_names[i]
-            image_data = tf.compat.v1.gfile.FastGFile(image_filename, 'rb').read()
+        image_filename = img_names[i]
+        image_data = tf.compat.v1.gfile.FastGFile(image_filename, 'rb').read()
         height, width = image_reader.read_image_dims(image_data)
         # Read the semantic segmentation annotation.
         seg_filename = seg_names[i]
