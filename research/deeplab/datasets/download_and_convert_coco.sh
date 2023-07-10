@@ -14,45 +14,48 @@
 # limitations under the License.
 # ==============================================================================
 #
-# Script to download and preprocess the coco dataset.
+# Script to download and preprocess the PASCAL VOC 2012 dataset.
 #
 # Usage:
-#   bash ./download_and_convert_coco.sh
+#   bash ./download_and_convert_voc2012.sh
 #
 # The folder structure is assumed to be:
-# .(COCO_ROOT)
-#+-- train2017
-#|   |
-#|   +-- *.jpg
-#|
-#|-- val2017
-#|   |
-#|   +-- *.jpg
-#|
-#|-- test2017
-#|   |
-#|   +-- *.jpg
-#|
-#+-- annotations
-#     |
-#     +-- panoptic_{train|val}2017.json
-#     +-- panoptic_{train|val}2017
+#  + datasets
+#     - build_data.py
+#     - build_voc2012_data.py
+#     - download_and_convert_voc2012.sh
+#     - remove_gt_colormap.py
+#     + pascal_voc_seg
+#       + VOCdevkit
+#         + VOC2012
+#           + JPEGImages
+#           + SegmentationClass
+#
 
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
 CURRENT_DIR=$(pwd)
-WORK_DIR="./coco"
+WORK_DIR="./coco/surface_dataset"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+# Root path for PASCAL VOC 2012 dataset.
+PASCAL_ROOT="${WORK_DIR}/voc"
 
-# Root path for ADE20K dataset.
-COCO_ROOT="${WORK_DIR}/surface_dataset"
-
+# Remove the colormap in the ground truth annotations.
+SEG_FOLDER="${PASCAL_ROOT}/SegmentationClass"
+SEMANTIC_SEG_FOLDER="${PASCAL_ROOT}/SegmentationClassRaw"
 # Build TFRecords of the dataset.
 # First, create output directory for storing TFRecords.
 OUTPUT_DIR="${WORK_DIR}/tfrecord"
 mkdir -p "${OUTPUT_DIR}"
 
-echo "Converting coco dataset..."
-python ./build_coco_data.py  \
-  --coco_root="${COCO_ROOT}" \
+IMAGE_FOLDER="${PASCAL_ROOT}/JPEGImages"
+LIST_FOLDER="${PASCAL_ROOT}/ImageSets/Segmentation"
+
+echo "Converting PASCAL VOC 2012 dataset..."
+python3 "${SCRIPT_DIR}/build_voc2012_data.py" \
+  --image_folder="${IMAGE_FOLDER}" \
+  --semantic_segmentation_folder="${SEMANTIC_SEG_FOLDER}" \
+  --list_folder="${LIST_FOLDER}" \
+  --image_format="jpg" \
   --output_dir="${OUTPUT_DIR}"
