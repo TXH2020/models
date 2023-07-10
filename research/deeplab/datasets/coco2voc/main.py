@@ -43,8 +43,11 @@ if __name__ == '__main__':
 		os.system(f'rm -rf {instance_target_path} {class_target_path} {id_target_path} {train_image_id_list_path} {val_image_id_list_path} {trainval_image_id_list_path}')
 		print('Done.\n')
 	os.system(f'mkdir {instance_target_path} {class_target_path} {id_target_path}')
-
+	n_files=0
 	for mode in ['train', 'val']:
 		annotations_file = os.path.join(root, 'annotations', f'instances_{mode}.json')
 		
-		coco2voc(annotations_file, target_folder, mode=mode, name_bits=name_bits, n=None, compress=True)
+		coco2voc(annotations_file, target_folder, mode=mode, name_bits=name_bits, n=None, compress=True,n_files)
+		with open(annotations_file,'r') as f:
+      			x=json.load(f)
+    			n_files+=len(x['images'])+1
