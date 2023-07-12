@@ -113,7 +113,7 @@ _COCO_PANOPTIC_INFORMATION = DatasetDescriptor(
     splits_to_sizes={'train': 118,
                      'val': 5,
                      'test': 30},
-    num_classes=2,
+    num_classes=3,
     ignore_label=255,
 )
 
